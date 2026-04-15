@@ -1,16 +1,21 @@
 # Dotfiles
 
-Personal dotfiles for macOS and Linux.
+Personal dotfiles for macOS and Linux. Gruvbox Dark themed throughout.
 
 ## What's included
 
-| Config | Path | Description |
-|--------|------|-------------|
-| zsh | `.zshrc` | Oh My Zsh, plugins, aliases (git, playwright, pnpm) |
-| git | `.gitconfig` | User identity |
-| Starship | `.config/starship/starship.toml` | Gruvbox Dark prompt theme |
-| Ghostty | `.config/ghostty/config` | Terminal font settings |
-| Gruvbox syntax | `oh-my-zsh-custom/themes/` | Gruvbox colors for zsh-syntax-highlighting |
+| Config | Path |
+|--------|------|
+| zsh | `.zshrc` |
+| Starship | `.config/starship/starship.toml` |
+| Ghostty | `.config/ghostty/config` |
+| Hyprland | `.config/hypr/` |
+| Waybar | `.config/waybar/` |
+| Wofi | `.config/wofi/` |
+| Wlogout | `.config/wlogout/` |
+| Waypaper | `.config/waypaper/` |
+| htop | `.config/htop/` |
+| Gruvbox zsh theme | `oh-my-zsh-custom/themes/` |
 
 ## Setup with Claude Code (recommended)
 
@@ -24,11 +29,10 @@ claude
 The `/setup` command walks you through an interactive setup:
 1. Detects your OS, distro, and package manager
 2. Audits which tools are already installed
-3. Lets you pick which configs to symlink
-4. Offers to install missing tools with the right commands for your platform
-5. Suggests optimizations (font rendering, GPU drivers, CLI power tools, zsh performance)
+3. Symlinks configs to their correct locations
+4. Installs missing tools with the right commands for your platform
 
-Works on macOS (Homebrew), Debian/Ubuntu (apt), Arch/CachyOS/Manjaro (pacman), and Fedora (dnf).
+Works on macOS (Homebrew), Debian/Ubuntu (apt), Arch (pacman), and Fedora (dnf).
 
 ## Quick install (non-interactive)
 
@@ -44,6 +48,6 @@ chmod +x install.sh
 ## Prerequisites
 
 - `git` and `curl`
-- A [Nerd Font](https://www.nerdfonts.com/) (JetBrains Mono Nerd Font recommended)
+- A [Nerd Font](https://www.nerdfonts.com/) (FiraCode Nerd Font recommended)
 - [Ghostty](https://ghostty.org/) terminal
 - [Claude Code](https://claude.ai/code) (for `/setup`)

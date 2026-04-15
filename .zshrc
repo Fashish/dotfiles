@@ -39,16 +39,8 @@ source ~/.oh-my-zsh/custom/themes/gruvbox-zsh-syntax-highlighting.zsh
 # =============================================================================
 # Node — fnm
 # =============================================================================
+export PATH="$HOME/.local/share/fnm:$PATH"
 eval "$(fnm env --use-on-cd --shell zsh)"
-
-# =============================================================================
-# pnpm
-# =============================================================================
-export PNPM_HOME="$HOME/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
 
 # =============================================================================
 # Git aliases
@@ -97,13 +89,17 @@ alias pt='pnpm test'
 # =============================================================================
 # General aliases
 # =============================================================================
-alias subl='"/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"'
+if [[ "$(uname)" == "Darwin" ]]; then
+  alias subl='"/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"'
+  alias ls='ls -G'                      # coloured output on macOS
+else
+  alias ls='ls --color=auto'            # coloured output on Linux
+fi
 alias galias='alias | sort'             # list all aliases
 alias zshrc='code ~/.zshrc'            # open zshrc in VS Code
 alias reload='source ~/.zshrc'         # reload config
 alias ..='cd ..'
 alias ...='cd ../..'
-alias ls='ls -G'                        # coloured output on macOS
 alias la='ls -lAh'
 
 # =============================================================================

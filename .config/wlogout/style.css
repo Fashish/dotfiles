@@ -1,0 +1,41 @@
+* {
+    background-image: none;
+    box-shadow: none;
+}
+
+window {
+    background-color: rgba(40, 40, 40, 0.95);
+}
+
+button {
+    border-radius: 6px;
+    border: 1px solid #504945;
+    color: #ebdbb2;
+    background-color: #282828;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 25%;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+button:focus {
+    background-color: #282828;
+    color: #ebdbb2;
+    border-color: #504945;
+    box-shadow: none;
+}
+
+button:active,
+button:hover {
+    background-color: #3c3836;
+    color: #d65d0e;
+    border-color: #d65d0e;
+    box-shadow: 0 0 8px rgba(214, 93, 14, 0.4);
+}
+
+#lock      { background-image: url("/home/fador/.config/wlogout/icons/lock.svg"); }
+#logout    { background-image: url("/home/fador/.config/wlogout/icons/logout.svg"); }
+#suspend   { background-image: url("/home/fador/.config/wlogout/icons/suspend.svg"); }
+#hibernate { background-image: url("/home/fador/.config/wlogout/icons/hibernate.svg"); }
+#shutdown  { background-image: url("/home/fador/.config/wlogout/icons/shutdown.svg"); }
+#reboot    { background-image: url("/home/fador/.config/wlogout/icons/reboot.svg"); }

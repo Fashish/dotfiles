@@ -1,0 +1,145 @@
+{
+  "layer": "top",
+  "position": "top",
+  "margin-top": 6,
+  "margin-left": 800,
+  "margin-right": 800,
+  "height": 36,
+  "modules-left": ["group/leftcluster"],
+  "modules-center": ["hyprland/workspaces"],
+  "modules-right": ["group/rightcluster"],
+  "group/leftcluster": {
+    "orientation": "horizontal",
+    "modules": [
+      "clock",
+      "custom/musiccontroller"
+    ]
+  },
+  "group/rightcluster": {
+    "orientation": "horizontal",
+    "modules": [
+      "group/volwifibt",
+      "custom/notification"
+    ]
+  },
+  "group/volwifibt": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 500,
+      "children-class": "not-power",
+      "transition-left-to-right": false,
+      "click-to-reveal": true
+    },
+    "modules": [
+      "custom/volwifibt",
+      "pulseaudio",
+      "bluetooth",
+      "network"
+    ]
+  },
+  "custom/musiccontroller": {
+    "exec": "~/.config/waybar/scripts/music_controller.sh",
+    "return-type": "json",
+    "interval": 1,
+    "signal": 15,
+    "format": "{text}",
+    "tooltip": true,
+    "on-click": "playerctl -a play-pause; pkill -RTMIN+15 waybar",
+    "on-click-right": "playerctl -a next; pkill -RTMIN+15 waybar",
+    "on-click-middle": "playerctl -a previous; pkill -RTMIN+15 waybar"
+  },
+  "custom/volwifibt": {
+    "format": "󰕾  󰤨 "
+  },
+  "custom/notification": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "<span foreground='red'><sup></sup></span>",
+      "none": "",
+      "dnd-notification": "<span foreground='red'><sup></sup></span>",
+      "dnd-none": "",
+      "inhibited-notification": "<span foreground='red'><sup></sup></span>",
+      "inhibited-none": "",
+      "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
+      "dnd-inhibited-none": ""
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+  "clock": {
+    "format": "󰥔  {:%H:%M}",
+    "tooltip-format": "{:%A | %d-%m-%Y}"
+  },
+  "pulseaudio": {
+    "format": "{icon}  {volume}%",
+    "format-bluetooth": "󰂱 {volume}%",
+    "format-muted": "󰖁",
+    "scroll-step": 1,
+    "on-click": "pavucontrol",
+    "ignored-sinks": [
+      "Easy Effects Sink"
+    ],
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "󰋎",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "󰖀",
+        "󰕾"
+      ]
+    },
+    "tooltip-format": "Volume: {volume}%"
+  },
+  "network": {
+    "format": "{ifname}",
+    "format-wifi": "{icon}  {essid}",
+    "format-ethernet": "󰈀  {ipaddr}/{cidr}",
+    "format-disconnected": "󰤭 Disconnected",
+    "max-length": 50,
+    "format-icons": [
+      " 󰤯 ",
+      " 󰤟 ",
+      " 󰤢 ",
+      " 󰤥 ",
+      " 󰤨 "
+    ],
+    "tooltip-format": "Connected to {essid}",
+    "on-click": "ghostty -e ~/.config/waybar/scripts/nmtui.sh"
+  },
+  "bluetooth": {
+    "format": "",
+    "format-on": "󰂲  Disconnected",
+    "format-disabled": "Disabled",
+    "format-connected": " {device_alias}",
+    "format-connected-battery": "󰂱 {device_alias}",
+    "on-click": "blueman-manager"
+  },
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "on-click": "activate",
+    "format-icons": {
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "",
+      "5": "",
+      "6": "",
+      "7": "",
+      "8": "",
+      "9": "",
+      "10": ""
+    },
+    "persistent-workspaces": {
+      "*": 5
+    },
+    "sort-by-number": true
+  }
+}

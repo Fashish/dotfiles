@@ -1,0 +1,144 @@
+/* ==========================================================
+   Waybar Gruvbox Theme
+   Palette:
+     --bg-deep:      #282828 / rgba(40, 40, 40, ...)
+     --bg-mid:       #3c3836 / rgba(60, 56, 54, ...)
+     --accent:       #d65d0e
+     --accent-warm:  #d79921
+     --accent-bright:#fabd2f
+     --text:         #ebdbb2
+   ========================================================== */
+
+/* --- Base / Reset --- */
+* {
+  font-family: "DM Sans", "JetBrainsMono Nerd Font Propo", sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 18px;
+}
+
+/* --- Bar Window --- */
+window#waybar {
+  background-color: rgba(40, 40, 40, 0.45);
+  border-radius: 14px;
+  border: 1px solid rgba(214, 93, 14, 0.15);
+  color: #ebdbb2;
+  padding: 4px 0;
+}
+
+window#waybar.empty #window {
+  background-color: transparent;
+}
+
+/* --- Default Module Style ---
+   Applies to all standard modules. Specific overrides below. */
+#pulseaudio,
+#network,
+#bluetooth,
+#clock,
+#custom-weather,
+#custom-media,
+#window,
+#tray,
+#custom-notification,
+#custom-musiccontroller {
+  color: #ebdbb2;
+  background-color: rgba(60, 56, 54, 0.55);
+  padding: 0 15px;
+  margin: 4px 4px;
+  border-radius: 18px;
+}
+
+/* --- Layout Spacing --- */
+#group-leftcluster {
+  margin: 0 0 0 4px;
+}
+
+#workspaces {
+  background-color: transparent;
+  padding: 4px 4px;
+}
+
+#group-rightcluster {
+  margin: 0 4px 0 0;
+}
+
+/* --- Workspaces --- */
+#workspaces button {
+  all: unset;
+  color: #ebdbb2;
+  background-color: rgba(60, 56, 54, 0.55);
+  padding: 4px 4px;
+  margin: 0 2px;
+  border-radius: 100px;
+  min-width: 20px;
+  min-height: 20px;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
+}
+
+#workspaces button.active {
+  background-color: #d65d0e;
+  color: #282828;
+  box-shadow: 0 0 8px rgba(214, 93, 14, 0.5);
+}
+
+#workspaces button:hover {
+  background: linear-gradient(135deg, #d65d0e, #fabd2f);
+  color: #282828;
+}
+
+#workspaces button.urgent {
+  background-color: #d65d0e;
+  color: #282828;
+}
+
+/* --- Music Controller --- */
+#custom-musiccontroller.playing {
+  color: #fabd2f;
+  font-size: 16px;
+}
+
+#custom-musiccontroller.paused {
+  color: #d79921;
+  opacity: 0.6;
+}
+
+/* --- Vol/WiFi/BT Drawer ---
+   The group is a transparent container.
+   The trigger icon and each child are individual pills. */
+#group-volwifibt {
+  background-color: transparent;
+  border-radius: 18px;
+  padding: 0;
+}
+
+/* Trigger button (collapsed state) */
+#custom-volwifibt {
+  font-size: 16px;
+  color: #ebdbb2;
+  background-color: rgba(60, 56, 54, 0.55);
+  padding: 0 15px 0 18px;
+  margin: 4px 0;
+  border-radius: 18px;
+}
+
+/* Expanded drawer children — specificity override */
+window#waybar #group-volwifibt #pulseaudio,
+window#waybar #group-volwifibt #bluetooth,
+window#waybar #group-volwifibt #network {
+  background-color: rgba(60, 56, 54, 0.75);
+  border-radius: 18px;
+  padding: 0 15px;
+  margin: 4px 3px;
+}
+
+/* --- Hidden Window --- */
+#window.hidden {
+  opacity: 0;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+}

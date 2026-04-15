@@ -7,7 +7,6 @@ echo "Installing dotfiles from $DOTFILES_DIR"
 
 # --- Symlink dotfiles ---
 ln -sfv "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
-ln -sfv "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
 
 # --- Starship config ---
 mkdir -p "$HOME/.config/starship"
@@ -23,6 +22,41 @@ else
 fi
 mkdir -p "$GHOSTTY_DIR"
 ln -sfv "$DOTFILES_DIR/.config/ghostty/config" "$GHOSTTY_DIR/config"
+
+# --- Hyprland config ---
+mkdir -p "$HOME/.config/hypr/conf" "$HOME/.config/hypr/bin"
+ln -sfv "$DOTFILES_DIR/.config/hypr/hyprland.conf" "$HOME/.config/hypr/hyprland.conf"
+ln -sfv "$DOTFILES_DIR/.config/hypr/hypridle.conf"  "$HOME/.config/hypr/hypridle.conf"
+ln -sfv "$DOTFILES_DIR/.config/hypr/hyprlock.conf"  "$HOME/.config/hypr/hyprlock.conf"
+ln -sfv "$DOTFILES_DIR/.config/hypr/conf/keybinds.conf" "$HOME/.config/hypr/conf/keybinds.conf"
+ln -sfv "$DOTFILES_DIR/.config/hypr/bin/songdetail.sh"  "$HOME/.config/hypr/bin/songdetail.sh"
+
+# --- Waybar config ---
+mkdir -p "$HOME/.config/waybar"
+ln -sfv "$DOTFILES_DIR/.config/waybar/config"    "$HOME/.config/waybar/config"
+ln -sfv "$DOTFILES_DIR/.config/waybar/style.css" "$HOME/.config/waybar/style.css"
+rm -rf  "$HOME/.config/waybar/scripts"
+ln -sfv "$DOTFILES_DIR/.config/waybar/scripts"   "$HOME/.config/waybar/scripts"
+
+# --- Wofi ---
+mkdir -p "$HOME/.config/wofi"
+ln -sfv "$DOTFILES_DIR/.config/wofi/config"    "$HOME/.config/wofi/config"
+ln -sfv "$DOTFILES_DIR/.config/wofi/style.css" "$HOME/.config/wofi/style.css"
+
+# --- Wlogout ---
+mkdir -p "$HOME/.config/wlogout"
+ln -sfv "$DOTFILES_DIR/.config/wlogout/layout"    "$HOME/.config/wlogout/layout"
+ln -sfv "$DOTFILES_DIR/.config/wlogout/style.css" "$HOME/.config/wlogout/style.css"
+rm -rf  "$HOME/.config/wlogout/icons"
+ln -sfv "$DOTFILES_DIR/.config/wlogout/icons"     "$HOME/.config/wlogout/icons"
+
+# --- Waypaper ---
+mkdir -p "$HOME/.config/waypaper"
+ln -sfv "$DOTFILES_DIR/.config/waypaper/config.ini" "$HOME/.config/waypaper/config.ini"
+
+# --- htop ---
+mkdir -p "$HOME/.config/htop"
+ln -sfv "$DOTFILES_DIR/.config/htop/htoprc" "$HOME/.config/htop/htoprc"
 
 # --- Oh My Zsh ---
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then

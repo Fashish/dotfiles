@@ -12,7 +12,27 @@ Personal dotfiles for macOS and Linux.
 | Ghostty | `.config/ghostty/config` | Terminal font settings |
 | Gruvbox syntax | `oh-my-zsh-custom/themes/` | Gruvbox colors for zsh-syntax-highlighting |
 
-## Install
+## Setup with Claude Code (recommended)
+
+```bash
+git clone git@github.com:Fashish/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+claude
+# then run: /setup
+```
+
+The `/setup` command walks you through an interactive setup:
+1. Detects your OS, distro, and package manager
+2. Audits which tools are already installed
+3. Lets you pick which configs to symlink
+4. Offers to install missing tools with the right commands for your platform
+5. Suggests optimizations (font rendering, GPU drivers, CLI power tools, zsh performance)
+
+Works on macOS (Homebrew), Debian/Ubuntu (apt), Arch/CachyOS/Manjaro (pacman), and Fedora (dnf).
+
+## Quick install (non-interactive)
+
+For CI, Docker, or when Claude Code isn't available:
 
 ```bash
 git clone git@github.com:Fashish/dotfiles.git ~/dotfiles
@@ -21,24 +41,9 @@ chmod +x install.sh
 ./install.sh
 ```
 
-The install script will:
-- Symlink all config files to the right locations (handles macOS vs Linux paths)
-- Install Oh My Zsh (if missing)
-- Clone zsh-autosuggestions and zsh-syntax-highlighting plugins
-- Install Starship prompt (if missing)
-- Install fnm - Fast Node Manager (if missing)
-
 ## Prerequisites
 
-- `git` and `curl` must be available
-- A [Nerd Font](https://www.nerdfonts.com/) installed (JetBrains Mono Nerd Font recommended)
+- `git` and `curl`
+- A [Nerd Font](https://www.nerdfonts.com/) (JetBrains Mono Nerd Font recommended)
 - [Ghostty](https://ghostty.org/) terminal
-
-## Post-install
-
-Update `.gitconfig` with your name/email if needed:
-
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "you@example.com"
-```
+- [Claude Code](https://claude.ai/code) (for `/setup`)

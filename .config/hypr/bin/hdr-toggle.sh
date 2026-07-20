@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # Toggle HDR on the AW3423DW (DP-2).
 # Hyprland's hyprctl doesn't expose runtime HDR state reliably (`cm` is null),
-# so we track it in a state file. Boot starts HDR-on per hyprland.conf, so
-# absent state file → assume "on" and toggle off.
+# so we track it in a state file. hyprland.conf boots the monitor in SDR, and the
+# state file lives in XDG_RUNTIME_DIR so it is cleared on logout — an absent file
+# therefore means "off", and the first press after boot enables HDR.
 
 STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/hdr-state"
 MONITOR="DP-2"
 RES="3440x1440@175"
 
-if [[ "$(cat "$STATE_FILE" 2>/dev/null)" == "off" ]]; then
+if [[ "$(cat "$STATE_FILE" 2>/dev/null || echo off)" != "on" ]]; then
     hyprctl keyword monitor "$MONITOR, $RES, auto, 1.0, bitdepth, 10, cm, hdr, sdrbrightness, 1.1, sdrsaturation, 1.1"
     echo on > "$STATE_FILE"
     sleep 3

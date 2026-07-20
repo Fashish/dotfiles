@@ -101,11 +101,18 @@ if [[ "$(uname)" == "Darwin" ]]; then
 else
   alias ls='ls --color=auto'            # coloured output on Linux
 fi
+
+# eza overrides the plain ls aliases above, where it is installed
+if command -v eza >/dev/null 2>&1; then
+  alias ls='eza --icons=auto --group-directories-first'
+  alias la='eza -la --icons=auto --group-directories-first'
+  alias ll='eza -l --icons=auto --group-directories-first'
+else
+  alias la='ls -lAh'
+  alias ll='ls -lh'
+fi
 alias galias='alias | sort'             # list all aliases
 alias zshrc='code ~/.zshrc'            # open zshrc in VS Code
 alias reload='source ~/.zshrc'         # reload config
 alias ..='cd ..'
 alias ...='cd ../..'
-alias ls='eza --icons=auto --group-directories-first'
-alias la='eza -la --icons=auto --group-directories-first'
-alias ll='eza -l --icons=auto --group-directories-first'

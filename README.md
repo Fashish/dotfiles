@@ -11,9 +11,7 @@ Personal dotfiles for macOS and Linux. Gruvbox Dark themed throughout.
 | Ghostty | `.config/ghostty/config` |
 | Hyprland | `.config/hypr/` |
 | Waybar | `.config/waybar/` |
-| Wofi | `.config/wofi/` |
-| Wlogout | `.config/wlogout/` |
-| Waypaper | `.config/waypaper/` |
+| Walker | `.config/walker/` |
 | htop | `.config/htop/` |
 | Gruvbox zsh theme | `oh-my-zsh-custom/themes/` |
 

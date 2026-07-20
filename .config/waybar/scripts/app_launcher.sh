@@ -1,3 +1,3 @@
 #!/bin/bash
 
-wofi --show drun
+walker

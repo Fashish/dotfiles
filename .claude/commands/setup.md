@@ -41,7 +41,7 @@ Check each tool and present a status table (installed / missing, version where a
 | Starship | `command -v starship` |
 | fnm | `command -v fnm` |
 | Ghostty | `command -v ghostty` or app bundle check on macOS |
-| Nerd Fonts | search font dirs for `*JetBrains*Nerd*`: `~/.local/share/fonts`, `/usr/share/fonts` (Linux), `~/Library/Fonts` (macOS) |
+| Nerd Fonts | search font dirs for `*FiraCode*Nerd*`: `~/.local/share/fonts`, `/usr/share/fonts` (Linux), `~/Library/Fonts` (macOS) |
 | pnpm | `command -v pnpm` |
 | git | `command -v git` |
 | curl | `command -v curl` |
@@ -60,10 +60,21 @@ Use AskUserQuestion with multiSelect to let them pick.
 | Config | Repo path | Target (macOS) | Target (Linux) |
 |--------|-----------|-----------------|-----------------|
 | zsh | `.zshrc` | `~/.zshrc` | `~/.zshrc` |
-| git | `.gitconfig` | `~/.gitconfig` | `~/.gitconfig` |
 | Starship prompt | `.config/starship/starship.toml` | `~/.config/starship/starship.toml` | `~/.config/starship/starship.toml` |
 | Ghostty | `.config/ghostty/config` | `~/Library/Application Support/com.mitchellh.ghostty/config` | `~/.config/ghostty/config` |
 | Gruvbox syntax theme | `oh-my-zsh-custom/themes/gruvbox-zsh-syntax-highlighting.zsh` | `$ZSH_CUSTOM/themes/...` | `$ZSH_CUSTOM/themes/...` |
+| htop | `.config/htop/htoprc` | `~/.config/htop/htoprc` | `~/.config/htop/htoprc` |
+| Hyprland | `.config/hypr/` | — (Linux only) | `~/.config/hypr/` |
+| Waybar | `.config/waybar/` | — (Linux only) | `~/.config/waybar/` |
+| Walker | `.config/walker/` | — (Linux only) | `~/.config/walker/` |
+
+The Linux-only desktop configs assume a Hyprland session. Don't offer them on macOS,
+and on Linux check the user actually runs Hyprland before symlinking. `.config/waybar/scripts`
+and `.config/walker/themes` are symlinked as whole directories — `install.sh` does this by
+removing the target dir first, so mirror that behaviour rather than linking file by file.
+
+Git identity is deliberately **not** tracked in this repo — there is no `.gitconfig`.
+If the user wants git configured, set it per-machine with `git config --global`.
 
 ### Before symlinking each config:
 
@@ -78,15 +89,13 @@ Use AskUserQuestion with multiSelect to let them pick.
 If the user is on Linux and chooses to symlink `.zshrc`, warn about macOS-specific lines and offer to create a platform-aware version. Specific lines to address:
 
 - **PNPM_HOME**: `~/Library/pnpm` (macOS) vs `~/.local/share/pnpm` (Linux)
-- **`ls -G`**: macOS flag — change to `ls --color=auto` on Linux
-- **`subl` alias**: points to `/Applications/Sublime Text.app/...` — remove or adapt on Linux
-- **VS Code shell integration**: the `code --locate-shell-integration-path` works on Linux too, but only if VS Code is installed — make it conditional
+- **PNPM_HOME**: not currently exported by `.zshrc` at all, though the `p*` aliases assume `pnpm` is on `PATH` — add it if the user installs pnpm and it isn't resolving
+- **`ls -G` / `subl`**: already guarded behind `if [[ "$(uname)" == "Darwin" ]]`, and `ls`/`la`/`ll` fall back to plain `ls` when `eza` is absent — no patching needed
+- **VS Code shell integration**: already conditional on `code` being installed
+- **fnm**: already conditional on `fnm` being installed
 
-The preferred approach is to add `if [[ "$(uname)" == "Darwin" ]]` / `else` guards directly in the `.zshrc` rather than maintaining two files. Ask the user if they want you to patch the file with these conditionals.
-
-### .gitconfig identity
-
-Always ask before symlinking `.gitconfig` — the user may want different name/email on this machine. If they want to customise, edit the symlinked copy or set local overrides via `git config --global`.
+The `.zshrc` is platform-aware as written, so prefer extending its existing `uname` and
+`command -v` guards over maintaining two files.
 
 ---
 
@@ -124,11 +133,11 @@ Use AskUserQuestion with multiSelect for selection.
 - Arch-based: check AUR (`yay -S ghostty` or `paru -S ghostty`), or official repos
 - Other Linux: guide user to https://ghostty.org/download — may require building from source
 
-**JetBrains Mono Nerd Font:**
-- macOS: `brew install --cask font-jetbrains-mono-nerd-font`
-- Arch-based: `sudo pacman -S ttf-jetbrains-mono-nerd`
+**FiraCode Nerd Font** (Ghostty's font; the Hyprland stack also uses JetBrainsMono Nerd Font and DM Sans):
+- macOS: `brew install --cask font-fira-code-nerd-font`
+- Arch-based: `sudo pacman -S ttf-firacode-nerd`
 - Debian/Ubuntu: download from https://github.com/ryanoasis/nerd-fonts/releases, extract to `~/.local/share/fonts/`, run `fc-cache -fv`
-- Fedora: `sudo dnf install jetbrains-mono-fonts-all` (then Nerd Font variant from release)
+- Fedora: `sudo dnf install fira-code-fonts` (then Nerd Font variant from release)
 
 **pnpm:**
 - All: `curl -fsSL https://get.pnpm.io/install.sh | sh -`
@@ -179,7 +188,7 @@ This phase is **advisory only** — present suggestions, explain why, and only a
 | `jq` | — | JSON processing |
 | `htop` / `btop` | `top` | Better process viewer |
 | `tldr` | `man` | Simplified man pages |
-| `zoxide` | `cd` / `z` | Smarter directory jumping (could replace the `z` oh-my-zsh plugin) |
+| `zoxide` | `cd` | Smarter directory jumping (the `z` oh-my-zsh plugin has been removed from `.zshrc`) |
 | `tmux` or `zellij` | — | Terminal multiplexer |
 
 Present these grouped by category. Use the correct package names for the detected package manager (e.g., `fd-find` on Debian vs `fd` on Arch/Homebrew).

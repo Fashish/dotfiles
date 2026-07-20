@@ -41,6 +41,12 @@ ln -sfv "$DOTFILES_DIR/.config/waybar/style.css" "$HOME/.config/waybar/style.css
 rm -rf  "$HOME/.config/waybar/scripts"
 ln -sfv "$DOTFILES_DIR/.config/waybar/scripts"   "$HOME/.config/waybar/scripts"
 
+# --- Walker (launcher + session menu) ---
+mkdir -p "$HOME/.config/walker"
+ln -sfv "$DOTFILES_DIR/.config/walker/config.toml" "$HOME/.config/walker/config.toml"
+rm -rf  "$HOME/.config/walker/themes"
+ln -sfv "$DOTFILES_DIR/.config/walker/themes"      "$HOME/.config/walker/themes"
+
 # --- htop ---
 mkdir -p "$HOME/.config/htop"
 ln -sfv "$DOTFILES_DIR/.config/htop/htoprc" "$HOME/.config/htop/htoprc"

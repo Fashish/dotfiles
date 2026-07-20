@@ -6,22 +6,49 @@ Personal dotfiles repo for macOS and Linux. Gruvbox Dark themed throughout.
 
 ```
 .zshrc                          → ~/.zshrc
-.gitconfig                      → ~/.gitconfig
 .config/starship/starship.toml  → ~/.config/starship/starship.toml
 .config/ghostty/config          → macOS: ~/Library/Application Support/com.mitchellh.ghostty/config
                                   Linux: ~/.config/ghostty/config
+.config/hypr/                   → ~/.config/hypr/          (Linux only)
+  hyprland.conf, hypridle.conf, hyprlock.conf
+  conf/keybinds.conf
+  bin/                          — songdetail, session-menu, hdr-toggle, screenshot
+.config/waybar/                 → ~/.config/waybar/        (Linux only; scripts/ is a dir symlink)
+.config/walker/                 → ~/.config/walker/        (Linux only; themes/ is a dir symlink)
+.config/htop/htoprc             → ~/.config/htop/htoprc
 oh-my-zsh-custom/themes/        → ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/
 install.sh                      — Non-interactive fallback installer (CI, Docker, quick setup)
 ```
+
+Note: `.gitconfig` is **not** tracked here — git identity is set per-machine via
+`git config --global`. The `/setup` command still offers it; treat that as optional.
 
 ## Tools managed
 
 - **Shell:** zsh + Oh My Zsh
 - **Plugins:** zsh-autosuggestions (git clone), zsh-syntax-highlighting (git clone)
 - **Prompt:** Starship with Gruvbox Dark palette
-- **Terminal:** Ghostty (JetBrains Mono Nerd Font, size 13)
+- **Terminal:** Ghostty (FiraCode Nerd Font, size 11)
 - **Node:** fnm (Fast Node Manager)
 - **Packages:** pnpm
+- **`ls`:** eza where installed, plain `ls` as fallback
+
+### Linux desktop (Hyprland stack)
+
+- **Compositor:** Hyprland — see the version note below
+- **Bar:** waybar, with swaync for notifications and swayosd for volume/brightness OSD
+- **Launcher / session menu:** walker (+ elephant backend), Gruvbox theme
+- **Wallpaper:** awww (`awww-daemon`), replacing the older swww/waypaper pair
+- **Cursor:** Bibata Modern Classic Gruvbox, via hyprcursor
+- **Misc:** cliphist, udiskie, easyeffects, polkit-gnome agent
+
+### Hyprland version sensitivity
+
+Hyprland is a rolling target and removes config keys without a deprecation window.
+When a `Config error in file ...` banner appears after an update, check the changelog
+before assuming the config is wrong. Already hit: `shadow:color` must use hex
+`rgba(RRGGBBAA)` (the `rgba(r, g, b, a)` float form fails the gradient parser as of
+0.56), and `ignore_window`, `pseudotile`, and `misc:vfr` were removed outright.
 
 ## OS differences to be aware of
 

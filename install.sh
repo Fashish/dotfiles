@@ -30,6 +30,9 @@ ln -sfv "$DOTFILES_DIR/.config/hypr/hypridle.conf"  "$HOME/.config/hypr/hypridle
 ln -sfv "$DOTFILES_DIR/.config/hypr/hyprlock.conf"  "$HOME/.config/hypr/hyprlock.conf"
 ln -sfv "$DOTFILES_DIR/.config/hypr/conf/keybinds.conf" "$HOME/.config/hypr/conf/keybinds.conf"
 ln -sfv "$DOTFILES_DIR/.config/hypr/bin/songdetail.sh"  "$HOME/.config/hypr/bin/songdetail.sh"
+ln -sfv "$DOTFILES_DIR/.config/hypr/bin/session-menu.sh" "$HOME/.config/hypr/bin/session-menu.sh"
+ln -sfv "$DOTFILES_DIR/.config/hypr/bin/hdr-toggle.sh"   "$HOME/.config/hypr/bin/hdr-toggle.sh"
+ln -sfv "$DOTFILES_DIR/.config/hypr/bin/screenshot.sh"   "$HOME/.config/hypr/bin/screenshot.sh"
 
 # --- Waybar config ---
 mkdir -p "$HOME/.config/waybar"
@@ -37,22 +40,6 @@ ln -sfv "$DOTFILES_DIR/.config/waybar/config"    "$HOME/.config/waybar/config"
 ln -sfv "$DOTFILES_DIR/.config/waybar/style.css" "$HOME/.config/waybar/style.css"
 rm -rf  "$HOME/.config/waybar/scripts"
 ln -sfv "$DOTFILES_DIR/.config/waybar/scripts"   "$HOME/.config/waybar/scripts"
-
-# --- Wofi ---
-mkdir -p "$HOME/.config/wofi"
-ln -sfv "$DOTFILES_DIR/.config/wofi/config"    "$HOME/.config/wofi/config"
-ln -sfv "$DOTFILES_DIR/.config/wofi/style.css" "$HOME/.config/wofi/style.css"
-
-# --- Wlogout ---
-mkdir -p "$HOME/.config/wlogout"
-ln -sfv "$DOTFILES_DIR/.config/wlogout/layout"    "$HOME/.config/wlogout/layout"
-ln -sfv "$DOTFILES_DIR/.config/wlogout/style.css" "$HOME/.config/wlogout/style.css"
-rm -rf  "$HOME/.config/wlogout/icons"
-ln -sfv "$DOTFILES_DIR/.config/wlogout/icons"     "$HOME/.config/wlogout/icons"
-
-# --- Waypaper ---
-mkdir -p "$HOME/.config/waypaper"
-ln -sfv "$DOTFILES_DIR/.config/waypaper/config.ini" "$HOME/.config/waypaper/config.ini"
 
 # --- htop ---
 mkdir -p "$HOME/.config/htop"

@@ -1,3 +1,5 @@
+export PATH="$HOME/.local/bin:$PATH"
+
 # =============================================================================
 # Oh My Zsh
 # =============================================================================
@@ -5,7 +7,6 @@ export ZSH="$HOME/.oh-my-zsh"
 
 plugins=(
   git
-  z                          # jump to frecent dirs with `z <name>`
   sudo                       # double-tap ESC to prepend sudo
   copypath                   # copy current path to clipboard
   zsh-autosuggestions
@@ -34,13 +35,18 @@ source ~/.oh-my-zsh/custom/themes/gruvbox-zsh-syntax-highlighting.zsh
 # =============================================================================
 # VS Code shell integration
 # =============================================================================
-[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+if [[ "$TERM_PROGRAM" == "vscode" ]] && command -v code >/dev/null 2>&1; then
+  shell_integration="$(code --locate-shell-integration-path zsh 2>/dev/null)"
+  [[ -r "$shell_integration" ]] && source "$shell_integration"
+  unset shell_integration
+fi
 
 # =============================================================================
 # Node — fnm
 # =============================================================================
-export PATH="$HOME/.local/share/fnm:$PATH"
-eval "$(fnm env --use-on-cd --shell zsh)"
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --use-on-cd --shell zsh)"
+fi
 
 # =============================================================================
 # Git aliases
@@ -100,9 +106,6 @@ alias zshrc='code ~/.zshrc'            # open zshrc in VS Code
 alias reload='source ~/.zshrc'         # reload config
 alias ..='cd ..'
 alias ...='cd ../..'
-alias la='ls -lAh'
-
-# =============================================================================
-# Claude Code (native)
-# =============================================================================
-export PATH="$HOME/.local/bin:$PATH"
+alias ls='eza --icons=auto --group-directories-first'
+alias la='eza -la --icons=auto --group-directories-first'
+alias ll='eza -l --icons=auto --group-directories-first'

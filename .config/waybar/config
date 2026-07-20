@@ -73,7 +73,26 @@
   },
   "clock": {
     "format": "󰥔  {:%H:%M}",
-    "tooltip-format": "{:%A | %d-%m-%Y}"
+    "format-alt": "󰥔  {:%a %d %b %Y}",
+    "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
+    "calendar": {
+      "mode": "month",
+      "mode-mon-col": 3,
+      "weeks-pos": "right",
+      "on-scroll": 1,
+      "format": {
+        "months":   "<span color='#fe8019'><b>{}</b></span>",
+        "days":     "<span color='#ebdbb2'>{}</span>",
+        "weeks":    "<span color='#a89984'><b>W{}</b></span>",
+        "weekdays": "<span color='#d65d0e'><b>{}</b></span>",
+        "today":    "<span color='#fb4934'><b><u>{}</u></b></span>"
+      }
+    },
+    "actions": {
+      "on-click-right": "mode",
+      "on-scroll-up": "shift_up",
+      "on-scroll-down": "shift_down"
+    }
   },
   "pulseaudio": {
     "format": "{icon}  {volume}%",

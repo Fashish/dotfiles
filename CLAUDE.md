@@ -13,6 +13,7 @@ Personal dotfiles repo for macOS and Linux. Gruvbox Dark themed throughout.
   hyprland.conf, hypridle.conf, hyprlock.conf
   conf/keybinds.conf
   bin/                          — songdetail, session-menu, hdr-toggle, screenshot
+.config/menus/applications.menu → ~/.config/menus/          (Linux only)
 .config/waybar/                 → ~/.config/waybar/        (Linux only; scripts/ is a dir symlink)
 .config/walker/                 → ~/.config/walker/        (Linux only; themes/ is a dir symlink)
 .config/htop/htoprc             → ~/.config/htop/htoprc
@@ -49,6 +50,22 @@ When a `Config error in file ...` banner appears after an update, check the chan
 before assuming the config is wrong. Already hit: `shadow:color` must use hex
 `rgba(RRGGBBAA)` (the `rgba(r, g, b, a)` float form fails the gradient parser as of
 0.56), and `ignore_window`, `pseudotile`, and `misc:vfr` were removed outright.
+
+### KDE apps under a bare Hyprland session
+
+KDE apps (Dolphin, Ark, Haruna) don't read `mimeapps.list` directly — they resolve
+apps through `ksycoca`, and `kbuildsycoca6` enumerates applications by walking the
+XDG **menu** definition. A bare Hyprland session has no `/etc/xdg/menus/` at all
+(that file ships with Plasma, and no KDE app depends on it), so ksycoca indexes zero
+applications and every file association silently fails — the symptom is an "Open With"
+dialog with a completely empty application list. Fixed by the tracked
+`.config/menus/applications.menu`.
+
+Related: Hyprland sets no XDG base dirs by default. `hyprland.conf` now sets
+`XDG_DATA_HOME`, `XDG_CONFIG_HOME`, `XDG_DATA_DIRS`, `XDG_CONFIG_DIRS` explicitly
+(same values as the spec fallbacks, just no longer implicit). Do **not** set
+`XDG_MENU_PREFIX` — KDE would then look for `<prefix>applications.menu` and miss the
+file above. Note `env =` lines only apply at Hyprland startup, not on `hyprctl reload`.
 
 ## OS differences to be aware of
 

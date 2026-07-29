@@ -34,6 +34,13 @@ ln -sfv "$DOTFILES_DIR/.config/hypr/bin/session-menu.sh" "$HOME/.config/hypr/bin
 ln -sfv "$DOTFILES_DIR/.config/hypr/bin/hdr-toggle.sh"   "$HOME/.config/hypr/bin/hdr-toggle.sh"
 ln -sfv "$DOTFILES_DIR/.config/hypr/bin/screenshot.sh"   "$HOME/.config/hypr/bin/screenshot.sh"
 
+# --- XDG application menu ---
+# Ships with Plasma, but a bare Hyprland session has no /etc/xdg/menus at all.
+# Without it kbuildsycoca6 indexes zero applications, so KDE apps (Dolphin, Ark,
+# Haruna) lose every file association and show an empty "Open With" picker.
+mkdir -p "$HOME/.config/menus"
+ln -sfv "$DOTFILES_DIR/.config/menus/applications.menu" "$HOME/.config/menus/applications.menu"
+
 # --- Waybar config ---
 mkdir -p "$HOME/.config/waybar"
 ln -sfv "$DOTFILES_DIR/.config/waybar/config"    "$HOME/.config/waybar/config"

@@ -1,0 +1,65 @@
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd">
+<Menu>
+  <Name>Applications</Name>
+  <Directory>Applications.directory</Directory>
+  <DefaultAppDirs/>
+  <DefaultDirectoryDirs/>
+  <DefaultMergeDirs/>
+
+  <Menu>
+    <Name>Multimedia</Name>
+    <Directory>Multimedia.directory</Directory>
+    <Include><And><Category>AudioVideo</Category></And></Include>
+  </Menu>
+
+  <Menu>
+    <Name>Graphics</Name>
+    <Directory>Graphics.directory</Directory>
+    <Include><And><Category>Graphics</Category></And></Include>
+  </Menu>
+
+  <Menu>
+    <Name>Development</Name>
+    <Directory>Development.directory</Directory>
+    <Include><And><Category>Development</Category></And></Include>
+  </Menu>
+
+  <Menu>
+    <Name>Internet</Name>
+    <Directory>Network.directory</Directory>
+    <Include><And><Category>Network</Category></And></Include>
+  </Menu>
+
+  <Menu>
+    <Name>Office</Name>
+    <Directory>Office.directory</Directory>
+    <Include><And><Category>Office</Category></And></Include>
+  </Menu>
+
+  <Menu>
+    <Name>System</Name>
+    <Directory>System.directory</Directory>
+    <Include><And><Category>System</Category></And></Include>
+  </Menu>
+
+  <Menu>
+    <Name>Settings</Name>
+    <Directory>Settings.directory</Directory>
+    <Include><And><Category>Settings</Category></And></Include>
+  </Menu>
+
+  <Menu>
+    <Name>Utilities</Name>
+    <Directory>Utility.directory</Directory>
+    <Include><And><Category>Utility</Category></And></Include>
+  </Menu>
+
+  <!-- Catch-all so nothing is invisible to KIO's application picker -->
+  <Menu>
+    <Name>Other</Name>
+    <Directory>Other.directory</Directory>
+    <OnlyUnallocated/>
+    <Include><All/></Include>
+  </Menu>
+</Menu>

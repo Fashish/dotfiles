@@ -59,6 +59,28 @@ the binds file does not take the rest of the config down.
 Hyprland only reads `hyprland.conf` when no `hyprland.lua` exists, so deleting
 `~/.config/hypr/hyprland.lua` rolls the whole thing back.
 
+**`hyprctl dispatch` takes Lua now.** This is the migration's sharpest edge, because
+it breaks *external* tools rather than the config, and it fails silently:
+
+```
+$ hyprctl dispatch dpms off
+error: [string "return hl.dispatch(dpms off)"]:1: ')' expected near 'on'
+$ echo $?
+7
+$ hyprctl dispatch 'hl.dsp.dpms({ action = "off" })'
+ok
+```
+
+Anything shelling out to `hyprctl dispatch` with the old syntax now silently
+no-ops. Already hit: `hypridle.conf` (all three DPMS call sites — fixed, with a
+`|| <legacy form>` fallback so it survives a rollback to `.conf`) and waybar's
+`hyprland/workspaces` click handler (upstream, fixed by Waybar PR #5013, not yet
+in the 0.15.0 release — no action, waiting for the next release).
+
+Check any new script with `hyprctl dispatch` against this before trusting it.
+Note that config-level validation cannot catch this class of bug:
+`--verify-config` and nested-instance testing only exercise config parsing.
+
 Editing tips:
 - Type stubs live at `/usr/share/hypr/stubs/hl.meta.lua` (~1770 lines). Point
   `lua_ls` at them for autocomplete and typo-checking on every option name.

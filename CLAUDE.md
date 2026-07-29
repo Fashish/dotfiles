@@ -46,8 +46,12 @@ Note: `.gitconfig` is **not** tracked here — git identity is set per-machine v
 
 ### Hyprland config format: Lua
 
-Since 0.55 hyprlang is deprecated in favour of Lua, and `hyprland.conf` will be
-removed in an unannounced future release. The live config is `hyprland.lua`,
+Since 0.55 hyprlang is deprecated in favour of Lua. Hyprland 0.56.1 prints a
+startup banner naming the removal version explicitly: "You are using the .conf
+config format, support for which will be removed in Hyprland 0.57." The banner
+only appears for `.conf`, so a working `hyprland.lua` silences it.
+
+The live config is `hyprland.lua`,
 which `require("conf/keybinds")` pulls the binds from — `require` paths are
 relative to `hyprland.lua` and each one gets its own error scope, so a mistake in
 the binds file does not take the rest of the config down.

@@ -57,8 +57,10 @@ hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
 hl.bind(ss .. " + W", hl.dsp.exec_cmd("~/.config/hypr/bin/screenshot.sh output"))
 hl.bind(ss .. " + S", hl.dsp.exec_cmd("~/.config/hypr/bin/screenshot.sh region"))
 
--- HDR toggle
-hl.bind(ss .. " + H", hl.dsp.exec_cmd("~/.config/hypr/bin/hdr-toggle.sh"))
+-- Binds defined in hyprland.lua, because they close over state or handles there:
+--   SUPER+SHIFT+H  HDR toggle          (needs applyMonitor)
+--   SUPER+SHIFT+T  workspace 3 float   (needs the window-rule handle)
+--   SUPER+SHIFT+G  performance mode
 
 -- Volume up / down / mute
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +5%"))

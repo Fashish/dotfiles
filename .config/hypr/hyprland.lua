@@ -5,31 +5,47 @@
 ---@module 'hl'
 
 -- ----------
--- Monitor
+-- Monitor + HDR toggle
 -- ----------
 
 local monitor = "DP-2"
+local mode    = "3440x1440@175"
 
--- SDR
-hl.monitor({
-    output   = monitor,
-    mode     = "3440x1440@175",
-    position = "auto",
-    scale    = 1.0,
-    bitdepth = 10,
-})
+-- Boots in SDR; SUPER+SHIFT+H flips it. This replaces bin/hdr-toggle.sh, which
+-- needed a state file under XDG_RUNTIME_DIR only because hyprlang could not hold
+-- state. Hyprland does not report runtime HDR state reliably (`cm` reads back
+-- null), so the flag below is still the source of truth — but it now lives in
+-- the config process rather than on disk, and applies without a hyprctl round
+-- trip. Note it resets to SDR on a config reload, matching the old behaviour of
+-- a state file that was cleared on logout.
+local hdrEnabled = false
 
--- HDR
--- hl.monitor({
---     output        = monitor,
---     mode          = "3440x1440@175",
---     position      = "auto",
---     scale         = 1.0,
---     bitdepth      = 10,
---     cm            = "hdr",
---     sdrbrightness = 1.1,
---     sdrsaturation = 1.1,
--- })
+local function applyMonitor()
+    hl.monitor({
+        output   = monitor,
+        mode     = mode,
+        position = "auto",
+        scale    = 1.0,
+        bitdepth = 10,
+        -- nil omits the key entirely, which is what the SDR form did before
+        cm            = hdrEnabled and "hdr" or nil,
+        sdrbrightness = hdrEnabled and 1.1 or nil,
+        sdrsaturation = hdrEnabled and 1.1 or nil,
+    })
+end
+
+applyMonitor()
+
+-- Lives here rather than in conf/keybinds.lua because it needs applyMonitor,
+-- and require() gives each file its own scope.
+hl.bind("SUPER + SHIFT + H", function()
+    hdrEnabled = not hdrEnabled
+    applyMonitor()
+    hl.notification.create({
+        text    = hdrEnabled and "HDR enabled" or "HDR disabled",
+        timeout = 3000,
+    })
+end)
 
 -- ----------
 -- Environment variables
@@ -82,12 +98,25 @@ end)
 -- Window rules
 -- ----------
 
--- Make everything in workspace 3 float
-hl.window_rule({
+-- Make everything in workspace 3 float.
+-- Captured as a handle so SUPER+SHIFT+T can switch it off and let workspace 3
+-- tile normally. set_enabled affects windows matched from then on, so it does
+-- not retile what is already open.
+local floatOnWorkspace3 = hl.window_rule({
     name  = "float-on-workspace-3",
     match = { workspace = "3" },
     float = true,
 })
+
+local ws3Floating = true
+hl.bind("SUPER + SHIFT + T", function()
+    ws3Floating = not ws3Floating
+    floatOnWorkspace3:set_enabled(ws3Floating)
+    hl.notification.create({
+        text    = ws3Floating and "Workspace 3: floating" or "Workspace 3: tiling",
+        timeout = 2000,
+    })
+end)
 
 -- Steam — workspace 3 is all-floating (see rule above), so no extra float rule needed
 hl.window_rule({
@@ -198,6 +227,28 @@ hl.config({
         direct_scanout = true, -- fullscreen apps bypass compositor
     },
 })
+
+-- ----------
+-- Performance mode
+-- ----------
+
+-- SUPER+SHIFT+G strips the expensive decoration while gaming. Runtime hl.config
+-- calls only override the keys named here; everything else is left alone.
+local effectsOn = true
+hl.bind("SUPER + SHIFT + G", function()
+    effectsOn = not effectsOn
+    hl.config({
+        decoration = {
+            blur   = { enabled = effectsOn },
+            shadow = { enabled = effectsOn },
+        },
+        animations = { enabled = effectsOn },
+    })
+    hl.notification.create({
+        text    = effectsOn and "Effects on" or "Performance mode",
+        timeout = 2000,
+    })
+end)
 
 -- ----------
 -- Animations

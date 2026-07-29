@@ -12,7 +12,7 @@ Personal dotfiles repo for macOS and Linux. Gruvbox Dark themed throughout.
 .config/hypr/                   → ~/.config/hypr/          (Linux only)
   hyprland.lua, conf/keybinds.lua — the Hyprland config (Lua, 0.55+)
   hypridle.conf, hyprlock.conf   — still hyprlang; only Hyprland moved to Lua
-  bin/                          — songdetail, session-menu, hdr-toggle, screenshot
+  bin/                          — songdetail, session-menu, screenshot
 .config/menus/applications.menu → ~/.config/menus/          (Linux only)
 .config/waybar/                 → ~/.config/waybar/        (Linux only; scripts/ is a dir symlink)
 .config/walker/                 → ~/.config/walker/        (Linux only; themes/ is a dir symlink)
@@ -85,8 +85,10 @@ returns exit 7, but `keyword` returns **0**, so a script cannot tell it failed.
 
 Already hit:
 - `hypridle.conf` — all three DPMS call sites. Fixed.
-- `bin/hdr-toggle.sh` — both `hyprctl keyword monitor` calls. Fixed, and it now
-  checks the output for `ok` rather than trusting the exit code.
+- `bin/hdr-toggle.sh` — both `hyprctl keyword monitor` calls were dead, so
+  SUPER+SHIFT+H did nothing. The script has since been deleted outright: the
+  toggle now lives in `hyprland.lua` as a bind closing over a Lua flag, so it
+  calls `hl.monitor` in-process and cannot hit this class of bug at all.
 - waybar's `hyprland/workspaces` click handler — upstream, fixed by Waybar
   PR #5013 but not in the installed 0.15.0. No action; waiting for the release.
 
@@ -122,7 +124,7 @@ applications and every file association silently fails — the symptom is an "Op
 dialog with a completely empty application list. Fixed by the tracked
 `.config/menus/applications.menu`.
 
-Related: Hyprland sets no XDG base dirs by default. `hyprland.conf` now sets
+Related: Hyprland sets no XDG base dirs by default. `hyprland.lua` now sets
 `XDG_DATA_HOME`, `XDG_CONFIG_HOME`, `XDG_DATA_DIRS`, `XDG_CONFIG_DIRS` explicitly
 (same values as the spec fallbacks, just no longer implicit). Do **not** set
 `XDG_MENU_PREFIX` — KDE would then look for `<prefix>applications.menu` and miss the

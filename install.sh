@@ -33,7 +33,6 @@ ln -sfv "$DOTFILES_DIR/.config/hypr/hypridle.conf"  "$HOME/.config/hypr/hypridle
 ln -sfv "$DOTFILES_DIR/.config/hypr/hyprlock.conf"  "$HOME/.config/hypr/hyprlock.conf"
 ln -sfv "$DOTFILES_DIR/.config/hypr/bin/songdetail.sh"  "$HOME/.config/hypr/bin/songdetail.sh"
 ln -sfv "$DOTFILES_DIR/.config/hypr/bin/session-menu.sh" "$HOME/.config/hypr/bin/session-menu.sh"
-ln -sfv "$DOTFILES_DIR/.config/hypr/bin/hdr-toggle.sh"   "$HOME/.config/hypr/bin/hdr-toggle.sh"
 ln -sfv "$DOTFILES_DIR/.config/hypr/bin/screenshot.sh"   "$HOME/.config/hypr/bin/screenshot.sh"
 
 # --- XDG application menu ---

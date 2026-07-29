@@ -10,8 +10,7 @@ Personal dotfiles repo for macOS and Linux. Gruvbox Dark themed throughout.
 .config/ghostty/config          → macOS: ~/Library/Application Support/com.mitchellh.ghostty/config
                                   Linux: ~/.config/ghostty/config
 .config/hypr/                   → ~/.config/hypr/          (Linux only)
-  hyprland.lua, conf/keybinds.lua — live config (Lua, Hyprland 0.55+)
-  hyprland.conf, conf/keybinds.conf — legacy hyprlang, kept as rollback only
+  hyprland.lua, conf/keybinds.lua — the Hyprland config (Lua, 0.55+)
   hypridle.conf, hyprlock.conf   — still hyprlang; only Hyprland moved to Lua
   bin/                          — songdetail, session-menu, hdr-toggle, screenshot
 .config/menus/applications.menu → ~/.config/menus/          (Linux only)
@@ -56,11 +55,13 @@ which `require("conf/keybinds")` pulls the binds from — `require` paths are
 relative to `hyprland.lua` and each one gets its own error scope, so a mistake in
 the binds file does not take the rest of the config down.
 
-Hyprland only reads `hyprland.conf` when no `hyprland.lua` exists, so deleting
-`~/.config/hypr/hyprland.lua` rolls the whole thing back.
+The legacy `hyprland.conf` / `conf/keybinds.conf` pair has been deleted — 0.57
+drops support for the format, so there was no future in keeping it. It is still
+in git history if it is ever needed: `git show <commit>^:.config/hypr/hyprland.conf`.
 
-**`hyprctl dispatch` takes Lua now.** This is the migration's sharpest edge, because
-it breaks *external* tools rather than the config, and it fails silently:
+**`hyprctl` no longer speaks hyprlang.** This is the migration's sharpest edge,
+because it breaks *external* tools rather than the config, and both forms fail
+quietly enough to miss:
 
 ```
 $ hyprctl dispatch dpms off
@@ -69,17 +70,29 @@ $ echo $?
 7
 $ hyprctl dispatch 'hl.dsp.dpms({ action = "off" })'
 ok
+
+$ hyprctl keyword monitor "DP-2, 3440x1440@175, auto, 1.0, bitdepth, 10"
+keyword can't work with non-legacy parsers. Use eval.
+$ echo $?
+0                          # <- exits 0 on failure, so callers cannot detect it
+$ hyprctl eval 'hl.monitor({ output = "DP-2", mode = "3440x1440@175", position = "auto", scale = 1.0, bitdepth = 10 })'
+ok
 ```
 
-Anything shelling out to `hyprctl dispatch` with the old syntax now silently
-no-ops. Already hit: `hypridle.conf` (all three DPMS call sites — fixed, with a
-`|| <legacy form>` fallback so it survives a rollback to `.conf`) and waybar's
-`hyprland/workspaces` click handler (upstream, fixed by Waybar PR #5013, not yet
-in the 0.15.0 release — no action, waiting for the next release).
+So: `dispatch` takes a Lua expression, and `keyword` is replaced by `eval`.
+Anything shelling out with the old syntax now no-ops — `dispatch` at least
+returns exit 7, but `keyword` returns **0**, so a script cannot tell it failed.
 
-Check any new script with `hyprctl dispatch` against this before trusting it.
-Note that config-level validation cannot catch this class of bug:
-`--verify-config` and nested-instance testing only exercise config parsing.
+Already hit:
+- `hypridle.conf` — all three DPMS call sites. Fixed.
+- `bin/hdr-toggle.sh` — both `hyprctl keyword monitor` calls. Fixed, and it now
+  checks the output for `ok` rather than trusting the exit code.
+- waybar's `hyprland/workspaces` click handler — upstream, fixed by Waybar
+  PR #5013 but not in the installed 0.15.0. No action; waiting for the release.
+
+Check any new script that shells out to `hyprctl` against this before trusting
+it. Config-level validation cannot catch this class of bug: `--verify-config`
+and nested-instance testing only exercise config parsing.
 
 Editing tips:
 - Type stubs live at `/usr/share/hypr/stubs/hl.meta.lua` (~1770 lines). Point

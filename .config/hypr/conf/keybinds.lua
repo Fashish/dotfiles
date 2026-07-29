@@ -1,9 +1,6 @@
 -- Keybinds. See https://wiki.hypr.land/Configuring/Basics/Binds/
--- Required from hyprland.lua. require() gives this file its own error scope,
--- so a mistake here won't take the rest of the config down with it.
 ---@module 'hl'
 
--- Programs
 local browser     = "zen-browser"
 local terminal    = "ghostty"
 local filemanager = "dolphin"
@@ -34,9 +31,8 @@ hl.bind("SUPER + right", hl.dsp.focus({ direction = "right" }))
 hl.bind("SUPER + up",    hl.dsp.focus({ direction = "up" }))
 hl.bind("SUPER + down",  hl.dsp.focus({ direction = "down" }))
 
--- Switch to workspace 1-10, and move the focused window to a workspace.
--- SUPER + 0 maps to workspace 10. follow = false is the old
--- "movetoworkspacesilent" — the window moves but the focus does not follow.
+-- SUPER + 0 maps to workspace 10. follow = false moves the window without
+-- following it (the old "movetoworkspacesilent").
 for i = 1, 10 do
     local key = i % 10
     hl.bind("SUPER + " .. key, hl.dsp.focus({ workspace = i }))
@@ -51,15 +47,13 @@ hl.bind("SUPER + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
--- Screenshots — saves to ~/Pictures/Screenshots/ AND copies to clipboard
--- SUPER+SHIFT+W: full monitor
--- SUPER+SHIFT+S: region
+-- Screenshots — saved to ~/Pictures/Screenshots/ and copied to the clipboard
 hl.bind(ss .. " + W", hl.dsp.exec_cmd("~/.config/hypr/bin/screenshot.sh output"))
 hl.bind(ss .. " + S", hl.dsp.exec_cmd("~/.config/hypr/bin/screenshot.sh region"))
 
--- Binds defined in hyprland.lua, because they close over state or handles there:
---   SUPER+SHIFT+H  HDR toggle          (needs applyMonitor)
---   SUPER+SHIFT+T  workspace 3 float   (needs the window-rule handle)
+-- Also bound, over in hyprland.lua (they close over state/handles defined there):
+--   SUPER+SHIFT+H  HDR toggle
+--   SUPER+SHIFT+T  workspace 3 float/tile
 --   SUPER+SHIFT+G  performance mode
 
 -- Volume up / down / mute

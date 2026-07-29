@@ -1,6 +1,3 @@
--- Hyprland config (Lua). Migrated from hyprland.conf — hyprlang is deprecated
--- since 0.55 and hyprland.conf will be dropped in a future release.
---
 -- Autocomplete: point lua_ls at /usr/share/hypr/stubs/hl.meta.lua
 ---@module 'hl'
 
@@ -11,13 +8,8 @@
 local monitor = "DP-2"
 local mode    = "3440x1440@175"
 
--- Boots in SDR; SUPER+SHIFT+H flips it. This replaces bin/hdr-toggle.sh, which
--- needed a state file under XDG_RUNTIME_DIR only because hyprlang could not hold
--- state. Hyprland does not report runtime HDR state reliably (`cm` reads back
--- null), so the flag below is still the source of truth — but it now lives in
--- the config process rather than on disk, and applies without a hyprctl round
--- trip. Note it resets to SDR on a config reload, matching the old behaviour of
--- a state file that was cleared on logout.
+-- Boots SDR; SUPER+SHIFT+H flips it. Hyprland reads `cm` back as null, so this
+-- flag is the source of truth. It resets to SDR on a config reload.
 local hdrEnabled = false
 
 local function applyMonitor()
@@ -27,8 +19,7 @@ local function applyMonitor()
         position = "auto",
         scale    = 1.0,
         bitdepth = 10,
-        -- nil omits the key entirely, which is what the SDR form did before
-        cm            = hdrEnabled and "hdr" or nil,
+        cm            = hdrEnabled and "hdr" or nil, -- nil omits the key entirely
         sdrbrightness = hdrEnabled and 1.1 or nil,
         sdrsaturation = hdrEnabled and 1.1 or nil,
     })
@@ -36,8 +27,6 @@ end
 
 applyMonitor()
 
--- Lives here rather than in conf/keybinds.lua because it needs applyMonitor,
--- and require() gives each file its own scope.
 hl.bind("SUPER + SHIFT + H", function()
     hdrEnabled = not hdrEnabled
     applyMonitor()
@@ -77,7 +66,7 @@ hl.env("HYPRCURSOR_SIZE", "24")
 -- Autostart
 -- ----------
 
--- hl.exec_cmd spawns asynchronously, so the old trailing "&" is not needed.
+-- hl.exec_cmd spawns async; no trailing "&" needed.
 hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")
     hl.exec_cmd("swaync")
@@ -98,10 +87,8 @@ end)
 -- Window rules
 -- ----------
 
--- Make everything in workspace 3 float.
--- Captured as a handle so SUPER+SHIFT+T can switch it off and let workspace 3
--- tile normally. set_enabled affects windows matched from then on, so it does
--- not retile what is already open.
+-- Everything on workspace 3 floats. SUPER+SHIFT+T disables the rule, which only
+-- affects windows matched afterwards — it does not retile what is already open.
 local floatOnWorkspace3 = hl.window_rule({
     name  = "float-on-workspace-3",
     match = { workspace = "3" },
@@ -118,7 +105,7 @@ hl.bind("SUPER + SHIFT + T", function()
     })
 end)
 
--- Steam — workspace 3 is all-floating (see rule above), so no extra float rule needed
+-- Steam — covered by the all-floating rule above, so no float rule of its own
 hl.window_rule({
     name      = "steam-to-workspace-3",
     match     = { class = "^(steam)$" },
@@ -126,8 +113,7 @@ hl.window_rule({
 })
 hl.workspace_rule({ workspace = "3", layout = "floating" })
 
--- Steam Games
--- (was three separate windowrule lines against the same match)
+-- Steam games
 hl.window_rule({
     name       = "steam-games",
     match      = { class = [[^steam_app_\d+$]] },
@@ -232,8 +218,7 @@ hl.config({
 -- Performance mode
 -- ----------
 
--- SUPER+SHIFT+G strips the expensive decoration while gaming. Runtime hl.config
--- calls only override the keys named here; everything else is left alone.
+-- Runtime hl.config overrides only the keys named here; the rest is untouched.
 local effectsOn = true
 hl.bind("SUPER + SHIFT + G", function()
     effectsOn = not effectsOn

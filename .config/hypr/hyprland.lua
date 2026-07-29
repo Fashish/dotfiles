@@ -19,9 +19,7 @@ local function applyMonitor()
         position = "auto",
         scale    = 1.0,
         bitdepth = 10,
-        -- Always explicit. At runtime an omitted key means "leave unchanged", not
-        -- "reset to default", so nil-ing these on the way back to SDR silently
-        -- left the HDR values applied.
+        -- Explicit, not nil: at runtime an omitted key means "leave unchanged".
         cm            = hdrEnabled and "hdr" or "srgb",
         sdrbrightness = hdrEnabled and 1.1 or 1.0,
         sdrsaturation = hdrEnabled and 1.1 or 1.0,
@@ -33,10 +31,14 @@ applyMonitor()
 hl.bind("SUPER + SHIFT + H", function()
     hdrEnabled = not hdrEnabled
     applyMonitor()
-    hl.notification.create({
-        text    = hdrEnabled and "HDR enabled" or "HDR disabled",
-        timeout = 3000,
-    })
+    -- Delayed so the toast lands after the mode switch settles, as the old
+    -- script's `sleep 3` did — the display blanks during renegotiation.
+    hl.timer(function()
+        hl.notification.create({
+            text    = hdrEnabled and "HDR enabled" or "HDR disabled",
+            timeout = 4000,
+        })
+    end, { timeout = 3000, type = "oneshot" })
 end)
 
 -- ----------

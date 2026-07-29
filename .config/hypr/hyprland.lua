@@ -19,9 +19,12 @@ local function applyMonitor()
         position = "auto",
         scale    = 1.0,
         bitdepth = 10,
-        cm            = hdrEnabled and "hdr" or nil, -- nil omits the key entirely
-        sdrbrightness = hdrEnabled and 1.1 or nil,
-        sdrsaturation = hdrEnabled and 1.1 or nil,
+        -- Always explicit. At runtime an omitted key means "leave unchanged", not
+        -- "reset to default", so nil-ing these on the way back to SDR silently
+        -- left the HDR values applied.
+        cm            = hdrEnabled and "hdr" or "srgb",
+        sdrbrightness = hdrEnabled and 1.1 or 1.0,
+        sdrsaturation = hdrEnabled and 1.1 or 1.0,
     })
 end
 
@@ -87,8 +90,7 @@ end)
 -- Window rules
 -- ----------
 
--- Everything on workspace 3 floats. SUPER+SHIFT+T disables the rule, which only
--- affects windows matched afterwards — it does not retile what is already open.
+-- Everything on workspace 3 floats. SUPER+SHIFT+T toggles it.
 local floatOnWorkspace3 = hl.window_rule({
     name  = "float-on-workspace-3",
     match = { workspace = "3" },
@@ -99,6 +101,10 @@ local ws3Floating = true
 hl.bind("SUPER + SHIFT + T", function()
     ws3Floating = not ws3Floating
     floatOnWorkspace3:set_enabled(ws3Floating)
+    -- The rule alone only applies at window-open, so bring existing ones along.
+    for _, w in ipairs(hl.get_windows({ workspace = 3 })) do
+        hl.dispatch(hl.dsp.window.float({ action = ws3Floating and "set" or "unset", window = w }))
+    end
     hl.notification.create({
         text    = ws3Floating and "Workspace 3: floating" or "Workspace 3: tiling",
         timeout = 2000,

@@ -10,8 +10,9 @@ Personal dotfiles repo for macOS and Linux. Gruvbox Dark themed throughout.
 .config/ghostty/config          → macOS: ~/Library/Application Support/com.mitchellh.ghostty/config
                                   Linux: ~/.config/ghostty/config
 .config/hypr/                   → ~/.config/hypr/          (Linux only)
-  hyprland.conf, hypridle.conf, hyprlock.conf
-  conf/keybinds.conf
+  hyprland.lua, conf/keybinds.lua — live config (Lua, Hyprland 0.55+)
+  hyprland.conf, conf/keybinds.conf — legacy hyprlang, kept as rollback only
+  hypridle.conf, hyprlock.conf   — still hyprlang; only Hyprland moved to Lua
   bin/                          — songdetail, session-menu, hdr-toggle, screenshot
 .config/menus/applications.menu → ~/.config/menus/          (Linux only)
 .config/waybar/                 → ~/.config/waybar/        (Linux only; scripts/ is a dir symlink)
@@ -42,6 +43,27 @@ Note: `.gitconfig` is **not** tracked here — git identity is set per-machine v
 - **Wallpaper:** awww (`awww-daemon`), replacing the older swww/waypaper pair
 - **Cursor:** Bibata Modern Classic Gruvbox, via hyprcursor
 - **Misc:** cliphist, udiskie, easyeffects, polkit-gnome agent
+
+### Hyprland config format: Lua
+
+Since 0.55 hyprlang is deprecated in favour of Lua, and `hyprland.conf` will be
+removed in an unannounced future release. The live config is `hyprland.lua`,
+which `require("conf/keybinds")` pulls the binds from — `require` paths are
+relative to `hyprland.lua` and each one gets its own error scope, so a mistake in
+the binds file does not take the rest of the config down.
+
+Hyprland only reads `hyprland.conf` when no `hyprland.lua` exists, so deleting
+`~/.config/hypr/hyprland.lua` rolls the whole thing back.
+
+Editing tips:
+- Type stubs live at `/usr/share/hypr/stubs/hl.meta.lua` (~1770 lines). Point
+  `lua_ls` at them for autocomplete and typo-checking on every option name.
+- The shipped reference config is `/usr/share/hypr/hyprland.lua`.
+- Regex in match tables should use long-bracket strings (`[[^steam_app_\d+$]]`)
+  — in a normal Lua string `\d` is an invalid escape and errors.
+- `movetoworkspacesilent` is `hl.dsp.window.move({ workspace = n, follow = false })`;
+  there is no `silent` flag on the dispatcher (only on window *rules*, as `"3 silent"`).
+- Syntax-check with `luac -p hyprland.lua conf/keybinds.lua` before restarting.
 
 ### Hyprland version sensitivity
 

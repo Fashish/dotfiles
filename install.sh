@@ -24,11 +24,18 @@ mkdir -p "$GHOSTTY_DIR"
 ln -sfv "$DOTFILES_DIR/.config/ghostty/config" "$GHOSTTY_DIR/config"
 
 # --- Hyprland config ---
+# hyprland.lua is the live config. Hyprland prefers hyprland.lua and only falls
+# back to hyprland.conf when the .lua is absent, so the legacy .conf pair is
+# still linked as a rollback path: remove ~/.config/hypr/hyprland.lua and the
+# old hyprlang config takes over again on the next restart.
+# hypridle/hyprlock keep their own .conf format — the Lua switch is Hyprland-only.
 mkdir -p "$HOME/.config/hypr/conf" "$HOME/.config/hypr/bin"
+ln -sfv "$DOTFILES_DIR/.config/hypr/hyprland.lua" "$HOME/.config/hypr/hyprland.lua"
+ln -sfv "$DOTFILES_DIR/.config/hypr/conf/keybinds.lua" "$HOME/.config/hypr/conf/keybinds.lua"
 ln -sfv "$DOTFILES_DIR/.config/hypr/hyprland.conf" "$HOME/.config/hypr/hyprland.conf"
+ln -sfv "$DOTFILES_DIR/.config/hypr/conf/keybinds.conf" "$HOME/.config/hypr/conf/keybinds.conf"
 ln -sfv "$DOTFILES_DIR/.config/hypr/hypridle.conf"  "$HOME/.config/hypr/hypridle.conf"
 ln -sfv "$DOTFILES_DIR/.config/hypr/hyprlock.conf"  "$HOME/.config/hypr/hyprlock.conf"
-ln -sfv "$DOTFILES_DIR/.config/hypr/conf/keybinds.conf" "$HOME/.config/hypr/conf/keybinds.conf"
 ln -sfv "$DOTFILES_DIR/.config/hypr/bin/songdetail.sh"  "$HOME/.config/hypr/bin/songdetail.sh"
 ln -sfv "$DOTFILES_DIR/.config/hypr/bin/session-menu.sh" "$HOME/.config/hypr/bin/session-menu.sh"
 ln -sfv "$DOTFILES_DIR/.config/hypr/bin/hdr-toggle.sh"   "$HOME/.config/hypr/bin/hdr-toggle.sh"

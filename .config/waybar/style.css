@@ -93,6 +93,32 @@ window#waybar.empty #window {
   color: #282828;
 }
 
+/* --- HDR indicator --- */
+#custom-hdr {
+  background-color: rgba(60, 56, 54, 0.55);
+  padding: 0 10px;
+  margin: 4px 2px;
+  border-radius: 100px;
+  min-width: 20px;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
+}
+
+#custom-hdr.off {
+  color: #665c54;
+}
+
+#custom-hdr.on {
+  background-color: #d65d0e;
+  color: #282828;
+  box-shadow: 0 0 8px rgba(214, 93, 14, 0.5);
+}
+
+#custom-hdr:hover {
+  background: linear-gradient(135deg, #d65d0e, #fabd2f);
+  color: #282828;
+}
+
 /* --- Music Controller --- */
 #custom-musiccontroller.playing {
   color: #fabd2f;

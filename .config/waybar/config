@@ -18,9 +18,19 @@
   "group/rightcluster": {
     "orientation": "horizontal",
     "modules": [
+      "custom/hdr",
       "group/volwifibt",
       "custom/notification"
     ]
+  },
+  "custom/hdr": {
+    "exec": "~/.config/waybar/scripts/hdr.sh",
+    "return-type": "json",
+    "interval": 5,
+    "signal": 16,
+    "format": "{text}",
+    "tooltip": true,
+    "on-click": "hyprctl eval 'ToggleHDR()'"
   },
   "group/volwifibt": {
     "orientation": "inherit",

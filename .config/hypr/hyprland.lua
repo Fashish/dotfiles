@@ -28,9 +28,11 @@ end
 
 applyMonitor()
 
-hl.bind("SUPER + SHIFT + H", function()
+-- Global so waybar's indicator can toggle it too: hyprctl eval 'ToggleHDR()'.
+function ToggleHDR()
     hdrEnabled = not hdrEnabled
     applyMonitor()
+    hl.exec_cmd("pkill -RTMIN+16 waybar")
     -- Delayed so the toast lands after the mode switch settles, as the old
     -- script's `sleep 3` did — the display blanks during renegotiation.
     hl.timer(function()
@@ -39,7 +41,9 @@ hl.bind("SUPER + SHIFT + H", function()
             timeout = 4000,
         })
     end, { timeout = 3000, type = "oneshot" })
-end)
+end
+
+hl.bind("SUPER + SHIFT + H", ToggleHDR)
 
 -- ----------
 -- Environment variables

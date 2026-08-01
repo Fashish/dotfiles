@@ -106,6 +106,16 @@ Editing tips:
   there is no `silent` flag on the dispatcher (only on window *rules*, as `"3 silent"`).
 - Syntax-check with `luac -p hyprland.lua conf/keybinds.lua` before restarting.
 
+### waybar persistent workspaces
+
+`persistent-workspaces` must list workspaces explicitly (`{"1": [], "2": [], ...}`,
+empty array = all outputs). The count form `{"*": 5}` does **not** mean workspaces
+1-5 — waybar derives each ID as `monitorId * 5 + i`, so on a machine whose only
+monitor has ID 1 it pins 6-10 instead, and the bar shows those *plus* whatever real
+workspaces exist. Symptom is too many icons and a count that changes as you switch.
+Monitor IDs are not stable across hotplugs, so the `"*"` form is wrong even when it
+happens to look right.
+
 ### Hyprland version sensitivity
 
 Hyprland is a rolling target and removes config keys without a deprecation window.

@@ -20,6 +20,7 @@ hl.bind("SUPER + B",      hl.dsp.exec_cmd(browser))
 hl.bind("SUPER + V",      hl.dsp.window.float({ action = "toggle" }))
 hl.bind("SUPER + E",      hl.dsp.exec_cmd(filemanager))
 hl.bind("SUPER + Y",      hl.dsp.exec_cmd("ghostty -e yazi"))
+hl.bind("SUPER + W",      hl.dsp.exec_cmd("qs ipc call wallpaper toggle"))
 hl.bind("SUPER + X",      hl.dsp.exec_cmd("~/.config/hypr/bin/session-menu.sh"))
 hl.bind("SUPER + ESCAPE", hl.dsp.exec_cmd('loginctl terminate-session "$XDG_SESSION_ID"'))
 hl.bind("SUPER + S",      hl.dsp.exec_cmd("steam"))
@@ -62,7 +63,6 @@ hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_
 hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle"))
 
 -- Media keys — Super-prefixed (avoids F7/F8/F9 conflicts with apps)
--- Signal 15 refreshes waybar's custom/musiccontroller widget
-hl.bind("SUPER + F7", hl.dsp.exec_cmd("playerctl -a previous ; pkill -RTMIN+15 waybar"))
-hl.bind("SUPER + F8", hl.dsp.exec_cmd("playerctl -a play-pause ; pkill -RTMIN+15 waybar"))
-hl.bind("SUPER + F9", hl.dsp.exec_cmd("playerctl -a next ; pkill -RTMIN+15 waybar"))
+hl.bind("SUPER + F7", hl.dsp.exec_cmd("playerctl -a previous"))
+hl.bind("SUPER + F8", hl.dsp.exec_cmd("playerctl -a play-pause"))
+hl.bind("SUPER + F9", hl.dsp.exec_cmd("playerctl -a next"))

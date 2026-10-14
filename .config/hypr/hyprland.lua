@@ -28,11 +28,11 @@ end
 
 applyMonitor()
 
--- Global so waybar's indicator can toggle it too: hyprctl eval 'ToggleHDR()'.
+-- Global so the bar's HDR pill can toggle it too: hyprctl eval 'ToggleHDR()'.
 function ToggleHDR()
     hdrEnabled = not hdrEnabled
     applyMonitor()
-    hl.exec_cmd("pkill -RTMIN+16 waybar")
+    hl.exec_cmd("sleep 2 && qs ipc call hdr refresh")
     -- Delayed so the toast lands after the mode switch settles, as the old
     -- script's `sleep 3` did — the display blanks during renegotiation.
     hl.timer(function()
@@ -77,11 +77,11 @@ hl.env("HYPRCURSOR_SIZE", "24")
 
 -- hl.exec_cmd spawns async; no trailing "&" needed.
 hl.on("hyprland.start", function()
-    hl.exec_cmd("waybar")
     hl.exec_cmd("swaync")
     hl.exec_cmd("hypridle")
     hl.exec_cmd("awww-daemon")
-    hl.exec_cmd("sleep 1 && awww img ~/Pictures/Wallpapers/wallhaven-gruvbox.png")
+    hl.exec_cmd("sleep 1 && ~/.config/hypr/bin/wallpaper.sh restore")
+    hl.exec_cmd("qs")
     hl.exec_cmd("elephant")
     hl.exec_cmd("walker --gapplication-service")
     hl.exec_cmd("hyprctl setcursor Bibata-Modern-Classic-Gruvbox 24")
@@ -141,6 +141,21 @@ hl.workspace_rule({ workspace = "10", no_border = true, no_rounding = true })
 -- Look and feel
 -- ----------
 
+-- The border accent follows the wallpaper: bin/wallpaper.sh writes this file
+-- and calls SetAccent() for the live session.
+local accentOk, accent = pcall(dofile, os.getenv("HOME") .. "/.local/state/desktop/accent.lua")
+if not accentOk or type(accent) ~= "table" then
+    accent = { accent = "d65d0e", highlight = "fe8019" }
+end
+
+local function accentBorder(dark, bright)
+    return { colors = { "rgba(" .. dark .. "80)", "rgba(" .. bright .. "80)" }, angle = 45 }
+end
+
+function SetAccent(dark, bright)
+    hl.config({ general = { col = { active_border = accentBorder(dark, bright) } } })
+end
+
 hl.config({
     input = {
         kb_layout = "gb",
@@ -166,7 +181,7 @@ hl.config({
         border_size = 2,
 
         col = {
-            active_border   = { colors = { "rgba(d65d0e80)", "rgba(fe801980)" }, angle = 45 },
+            active_border   = accentBorder(accent.accent, accent.highlight),
             inactive_border = "rgba(3c383680)",
         },
 

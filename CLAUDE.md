@@ -12,10 +12,11 @@ Personal dotfiles repo for macOS and Linux. Gruvbox Dark themed throughout.
 .config/hypr/                   → ~/.config/hypr/          (Linux only)
   hyprland.lua, conf/keybinds.lua — the Hyprland config (Lua, 0.55+)
   hypridle.conf, hyprlock.conf   — still hyprlang; only Hyprland moved to Lua
-  bin/                          — songdetail, session-menu, screenshot
+  bin/                          — songdetail, session-menu, screenshot, idle-guard, wallpaper
 .config/menus/applications.menu → ~/.config/menus/          (Linux only)
-.config/waybar/                 → ~/.config/waybar/        (Linux only; scripts/ is a dir symlink)
+.config/waybar/                 → ~/.config/waybar/        (Linux only; scripts/ is a dir symlink; no longer autostarted)
 .config/walker/                 → ~/.config/walker/        (Linux only; themes/ is a dir symlink)
+.config/quickshell/             → ~/.config/quickshell/    (Linux only; dir symlink — the bar, popups, wallpaper picker)
 .config/htop/htoprc             → ~/.config/htop/htoprc
 oh-my-zsh-custom/themes/        → ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/
 install.sh                      — Non-interactive fallback installer (CI, Docker, quick setup)
@@ -37,9 +38,15 @@ Note: `.gitconfig` is **not** tracked here — git identity is set per-machine v
 ### Linux desktop (Hyprland stack)
 
 - **Compositor:** Hyprland — see the version note below
-- **Bar:** waybar, with swaync for notifications and swayosd for volume/brightness OSD
+- **Bar:** Quickshell (`qs`, QML in `.config/quickshell/`), replacing waybar. swaync stays the
+  notification daemon (the bar's bell mirrors it); swayosd for the volume/brightness OSD.
+  Clock pill opens a dashboard (calendar, weather via Open-Meteo, to-do, notes, timer);
+  Super+W opens the wallpaper picker. Drive it with `qs ipc call …` (`--` before arguments)
 - **Launcher / session menu:** walker (+ elephant backend), Gruvbox theme
-- **Wallpaper:** awww (`awww-daemon`), replacing the older swww/waypaper pair
+- **Wallpaper:** awww (`awww-daemon`), driven by `bin/wallpaper.sh set|restore`. It snaps the
+  image's main colour (matugen) to the nearest Gruvbox accent and writes
+  `~/.local/state/desktop/{wallpaper,theme.json,accent.lua}`; Hyprland borders, hyprlock and
+  the bar read those. Walker's accent is still hard-coded
 - **Cursor:** Bibata Modern Classic Gruvbox, via hyprcursor
 - **Misc:** cliphist, udiskie, easyeffects, polkit-gnome agent
 

@@ -11,6 +11,8 @@ PanelWindow {
     required property string name
     required property Item anchorItem
     property int cardWidth: 340
+    property int padding: 18
+    property int spacing: 12
     default property alias content: body.data
 
     readonly property bool open: bar.openPopout === name
@@ -49,7 +51,7 @@ PanelWindow {
     Rectangle {
         id: card
         width: root.cardWidth
-        height: body.implicitHeight + 36
+        height: body.implicitHeight + 2 * root.padding
         Behavior on width { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
         radius: 16
         color: Theme.surface
@@ -63,10 +65,10 @@ PanelWindow {
 
         Column {
             id: body
-            x: 18
-            y: 18
-            width: parent.width - 36
-            spacing: 12
+            x: root.padding
+            y: root.padding
+            width: parent.width - 2 * root.padding
+            spacing: root.spacing
         }
     }
 }

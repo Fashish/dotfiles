@@ -41,7 +41,8 @@ Note: `.gitconfig` is **not** tracked here — git identity is set per-machine v
 - **Bar:** Quickshell (`qs`, QML in `.config/quickshell/`), replacing waybar. swaync stays the
   notification daemon (the bar's bell mirrors it); swayosd for the volume/brightness OSD.
   Clock pill opens a dashboard (calendar, weather via Open-Meteo, to-do, notes, timer);
-  Super+W opens the wallpaper picker. Drive it with `qs ipc call …` (`--` before arguments)
+  Super+W opens the wallpaper picker. The tray is a slide-out drawer (`Tray.qml`); its icon
+  theme is set by the `//@ pragma IconTheme` line in `shell.qml` (needs `qs kill && qs -d`). Drive it with `qs ipc call …` (`--` before arguments)
 - **Launcher / session menu:** walker (+ elephant backend), Gruvbox theme
 - **Wallpaper:** awww (`awww-daemon`), driven by `bin/wallpaper.sh set|restore`. It snaps the
   image's main colour (matugen) to the nearest Gruvbox accent and writes

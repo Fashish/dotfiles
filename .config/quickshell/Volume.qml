@@ -18,6 +18,6 @@ Pill {
 
     PwObjectTracker { objects: [root.sink] }
 
-    Icon { text: root.muted ? "\u{f0581}" : root.volume < 0.5 ? "\u{f0580}" : "\u{f057e}" }
     BarText { text: root.muted ? "Muted" : `${Math.round(root.volume * 100)}%` }
+    Icon { text: root.muted ? "\u{f0581}" : root.volume < 0.5 ? "\u{f0580}" : "\u{f057e}" }
 }

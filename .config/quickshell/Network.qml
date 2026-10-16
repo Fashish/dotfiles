@@ -13,11 +13,12 @@ Pill {
 
     onClicked: Quickshell.execDetached(["ghostty", "-e", Quickshell.env("HOME") + "/.config/waybar/scripts/nmtui.sh"])
 
+    BarText {
+        visible: root.hovered || !root.network && !root.wired
+        text: root.network ? `${Math.round(root.strength * 100)}%` : root.wired ? "Wired" : "Disconnected"
+    }
     Icon {
         text: root.network ? root.bars[Math.min(4, Math.floor(root.strength * 5))]
             : root.wired ? "\u{f0200}" : "\u{f092d}"
-    }
-    BarText {
-        text: root.network ? root.network.name : root.wired ? root.wired.name : "Disconnected"
     }
 }

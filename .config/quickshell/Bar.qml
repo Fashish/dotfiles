@@ -62,12 +62,15 @@ PanelWindow {
             anchors.rightMargin: 4
             height: parent.height
             spacing: 4
+            Tray { onMenuRequested: (item, anchor) => trayMenu.show(item, anchor) }
             Hdr {}
-            Drawer {}
+            Volume {}
+            Network {}
             Bell {}
         }
     }
 
     DashboardPopout { id: dashboard; bar: bar; anchorItem: clock }
+    TrayMenu { id: trayMenu; bar: bar; anchorItem: clock }
     MediaPopout { bar: bar; anchorItem: media; player: media.player }
 }

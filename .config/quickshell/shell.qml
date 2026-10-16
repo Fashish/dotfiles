@@ -1,3 +1,4 @@
+//@ pragma IconTheme Colloid-Orange-Gruvbox-Dark
 import QtQuick
 import Quickshell
 

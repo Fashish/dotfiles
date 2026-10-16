@@ -6,20 +6,57 @@ import Quickshell.Wayland
 
 PanelWindow {
     id: root
-    readonly property string folder: Quickshell.env("HOME") + "/Pictures/wallpapers"
-    readonly property string script: Quickshell.env("HOME") + "/.config/hypr/bin/wallpaper.sh"
+    readonly property string home: Quickshell.env("HOME")
+    readonly property string script: home + "/.config/hypr/bin/wallpaper.sh"
+    readonly property string runtime: Quickshell.env("XDG_RUNTIME_DIR") || "/tmp"
+
+    // "set" picks a wallpaper, "convert" picks an image to gruvify; editing is that image
+    property string tab: "set"
+    property string editing: ""
+    property string pending: ""  // file to select once the Set folder has (re)loaded
+
+    function tilde(path) { return path.replace(home, "~"); }
 
     function open() {
         visible = true;
-        const i = files.indexOf("file://" + Theme.wallpaper);
-        grid.currentIndex = i >= 0 ? i : 0;
-        grid.positionViewAtIndex(grid.currentIndex, GridView.Center);
+        showSet("file://" + Theme.wallpaper);
+    }
+
+    function close() {
+        visible = false;
+        editing = "";
+    }
+
+    function showSet(url) {
+        tab = "set";
+        editing = "";
+        pending = url;
+        Qt.callLater(selectPending);
         grid.forceActiveFocus();
     }
 
-    function choose(path) {
-        Quickshell.execDetached([script, "set", path]);
-        visible = false;
+    function selectPending() {
+        const i = setModel.indexOf(pending);
+        grid.currentIndex = i >= 0 ? i : 0;
+        grid.positionViewAtIndex(grid.currentIndex, GridView.Center);
+        if (i >= 0) pending = "";
+    }
+
+    function showConvert() {
+        tab = "convert";
+        editing = "";
+        grid.currentIndex = 0;
+        grid.forceActiveFocus();
+    }
+
+    function pick(path) {
+        if (tab === "convert") {
+            editing = path;
+            editor.forceActiveFocus();
+        } else {
+            Quickshell.execDetached([script, "set", path]);
+            close();
+        }
     }
 
     visible: false
@@ -32,22 +69,74 @@ PanelWindow {
 
     IpcHandler {
         target: "wallpaper"
-        function toggle(): void { root.visible ? root.visible = false : root.open(); }
-        function close(): void { root.visible = false; }
+        function toggle(): void { root.visible ? root.close() : root.open(); }
+        function close(): void { root.close(); }
+        // open the gruvify editor on any image
+        function edit(path: string): void {
+            root.visible = true;
+            root.tab = "convert";
+            root.pick(path);
+        }
+    }
+
+    // each tab's folder, remembered across sessions
+    FileView {
+        id: prefs
+        path: root.home + "/.local/state/desktop/wallpaper-picker.json"
+        atomicWrites: true
+        onLoadFailed: writeAdapter()
+
+        JsonAdapter {
+            id: folders
+            property string setDir: root.home + "/Pictures/wallpapers"
+            property string convertDir: root.home + "/Downloads"
+        }
+    }
+
+    // zenity can't take focus over an overlay layer, so the picker hides while it's open
+    Process {
+        id: chooser
+        stdout: StdioCollector { id: chosen }
+        onExited: code => {
+            const dir = chosen.text.trim();
+            if (code === 0 && dir) {
+                folders[root.tab + "Dir"] = dir;
+                prefs.writeAdapter();
+            }
+            root.visible = true;
+            root.tab === "set" ? root.showSet("") : root.showConvert();
+        }
+    }
+
+    function chooseFolder() {
+        chooser.command = ["zenity", "--file-selection", "--directory",
+            "--title=" + (tab === "set" ? "Wallpapers folder" : "Folder of images to convert"),
+            "--filename=" + folders[tab + "Dir"] + "/"];
+        visible = false;
+        chooser.running = true;
     }
 
     FolderListModel {
-        id: files
-        folder: "file://" + root.folder
+        id: setModel
+        folder: "file://" + folders.setDir
         nameFilters: ["*.png", "*.jpg", "*.jpeg", "*.webp"]
         showDirs: false
         sortField: FolderListModel.Name
+        onCountChanged: if (root.pending) root.selectPending()
+    }
+
+    FolderListModel {
+        id: convertModel
+        folder: "file://" + folders.convertDir
+        nameFilters: ["*.png", "*.jpg", "*.jpeg", "*.webp"]
+        showDirs: false
+        sortField: FolderListModel.Time
     }
 
     // click outside the panel to close
     MouseArea {
         anchors.fill: parent
-        onClicked: root.visible = false
+        onClicked: root.close()
     }
 
     Rectangle {
@@ -74,15 +163,37 @@ PanelWindow {
                 color: Theme.accent
             }
             Text {
-                text: "Wallpapers"
+                text: root.editing ? "Gruvify" : "Wallpapers"
                 color: Theme.fg
                 font.family: Theme.font
                 font.pixelSize: 20
                 font.weight: Font.Bold
             }
+            TextButton {
+                visible: !root.editing
+                anchors.verticalCenter: parent.verticalCenter
+                text: "Set"
+                primary: root.tab === "set"
+                onClicked: root.showSet("")
+            }
+            TextButton {
+                visible: !root.editing
+                anchors.verticalCenter: parent.verticalCenter
+                text: "Convert"
+                primary: root.tab === "convert"
+                onClicked: root.showConvert()
+            }
+            TextButton {
+                visible: !root.editing
+                anchors.verticalCenter: parent.verticalCenter
+                text: root.tilde(folders[root.tab + "Dir"]) + " …"
+                onClicked: root.chooseFolder()
+            }
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                text: `${files.count} in ~/Pictures/wallpapers · arrows + Enter · Esc to close`
+                text: root.editing ? root.editing.split("/").pop() + " · Esc to go back"
+                    : root.tab === "set" ? `${setModel.count} wallpapers · arrows + Enter · Tab for Convert · Esc to close`
+                    : `${convertModel.count} images, newest first · pick one to gruvify`
                 color: Theme.muted
                 font.family: Theme.font
                 font.pixelSize: 13
@@ -91,28 +202,29 @@ PanelWindow {
 
         GridView {
             id: grid
+            visible: !root.editing
             anchors.fill: parent
             anchors.topMargin: header.y + header.height + 16
             anchors.margins: 24
             cellWidth: 300
             cellHeight: 150
             clip: true
-            model: files
+            model: root.tab === "set" ? setModel : convertModel
             keyNavigationEnabled: true
             highlightMoveDuration: 120
             boundsBehavior: Flickable.StopAtBounds
 
-            Keys.onReturnPressed: root.choose(files.get(currentIndex, "filePath"))
-            Keys.onEnterPressed: root.choose(files.get(currentIndex, "filePath"))
-            Keys.onEscapePressed: root.visible = false
+            Keys.onReturnPressed: root.pick(model.get(currentIndex, "filePath"))
+            Keys.onEnterPressed: root.pick(model.get(currentIndex, "filePath"))
+            Keys.onTabPressed: root.tab === "set" ? root.showConvert() : root.showSet("")
+            Keys.onEscapePressed: root.close()
 
             delegate: Item {
                 id: cell
                 required property int index
                 required property string filePath
-                required property string fileName
                 readonly property bool current: GridView.isCurrentItem
-                readonly property bool active: filePath === Theme.wallpaper
+                readonly property bool active: root.tab === "set" && filePath === Theme.wallpaper
 
                 width: grid.cellWidth
                 height: grid.cellHeight
@@ -163,9 +275,23 @@ PanelWindow {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onEntered: grid.currentIndex = cell.index
-                    onClicked: root.choose(cell.filePath)
+                    onClicked: root.pick(cell.filePath)
                 }
             }
+        }
+
+        GruvifyEditor {
+            id: editor
+            visible: !!root.editing
+            anchors.fill: parent
+            anchors.topMargin: header.y + header.height + 16
+            anchors.margins: 24
+            source: root.editing
+            script: root.script
+            runtime: root.runtime
+            outDir: folders.setDir
+            onBack: root.showConvert()
+            onSaved: (path, applied) => applied ? root.close() : root.showSet("file://" + path)
         }
     }
 }

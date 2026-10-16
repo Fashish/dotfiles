@@ -47,7 +47,14 @@ Note: `.gitconfig` is **not** tracked here — git identity is set per-machine v
 - **Wallpaper:** awww (`awww-daemon`), driven by `bin/wallpaper.sh set|restore`. It snaps the
   image's main colour (matugen) to the nearest Gruvbox accent and writes
   `~/.local/state/desktop/{wallpaper,theme.json,accent.lua}`; Hyprland borders, hyprlock and
-  the bar read those. Walker's accent is still hard-coded
+  the bar read those. `wallpaper gruvify <img>... [strength%] [--set] [--keep-bg] [--keep-hues]` (on PATH via
+  `~/.local/bin/wallpaper`) fits an image to 3440x1440 and recolours it towards Gruvbox (lutgen LUT,
+  cached in `~/.cache/desktop`). On a flat-colour background the subject is centred within the
+  margins, and the background goes `#282828` unless `--keep-bg`; cool hues go orange. Pixel work
+  lives in `bin/wallpaper-tone.py`. The picker has Set and Convert tabs, each with a folder chosen
+  via zenity and remembered in `~/.local/state/desktop/wallpaper-picker.json`; picking in Convert
+  (or `qs ipc call wallpaper edit <path>`) opens a live-preview editor (`GruvifyEditor.qml`) that
+  saves into the Set folder. Walker's accent is still hard-coded
 - **Cursor:** Bibata Modern Classic Gruvbox, via hyprcursor
 - **Misc:** cliphist, udiskie, easyeffects, polkit-gnome agent
 

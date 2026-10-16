@@ -11,7 +11,7 @@ Pill {
     readonly property real strength: network?.signalStrength ?? 0
     readonly property var bars: ["\u{f092f}", "\u{f091f}", "\u{f0922}", "\u{f0925}", "\u{f0928}"]
 
-    onClicked: Quickshell.execDetached(["ghostty", "-e", Quickshell.env("HOME") + "/.config/waybar/scripts/nmtui.sh"])
+    onClicked: Quickshell.execDetached(["ghostty", "-e", Quickshell.env("HOME") + "/.config/hypr/bin/nmtui.sh"])
 
     BarText {
         visible: root.hovered || !root.network && !root.wired

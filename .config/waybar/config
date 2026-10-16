@@ -141,7 +141,7 @@
       " 󰤨 "
     ],
     "tooltip-format": "Connected to {essid}",
-    "on-click": "ghostty -e ~/.config/waybar/scripts/nmtui.sh"
+    "on-click": "ghostty -e ~/.config/hypr/bin/nmtui.sh"
   },
   "bluetooth": {
     "format": "",

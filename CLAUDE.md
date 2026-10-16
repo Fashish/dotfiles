@@ -12,7 +12,7 @@ Personal dotfiles repo for macOS and Linux. Gruvbox Dark themed throughout.
 .config/hypr/                   → ~/.config/hypr/          (Linux only)
   hyprland.lua, conf/keybinds.lua — the Hyprland config (Lua, 0.55+)
   hypridle.conf, hyprlock.conf   — still hyprlang; only Hyprland moved to Lua
-  bin/                          — songdetail, session-menu, screenshot, idle-guard, wallpaper
+  bin/                          — songdetail, session-menu, screenshot, idle-guard, wallpaper, nmtui
 .config/menus/applications.menu → ~/.config/menus/          (Linux only)
 .config/waybar/                 → ~/.config/waybar/        (Linux only; scripts/ is a dir symlink; no longer autostarted)
 .config/walker/                 → ~/.config/walker/        (Linux only; themes/ is a dir symlink)
